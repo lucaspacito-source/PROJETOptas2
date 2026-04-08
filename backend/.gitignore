@@ -1,5 +1,10 @@
-node_modules
-# Keep environment variables out of version control
-.env
+# .gitignore
 
-/generated/prisma
+node_modules/
+dist/
+.env          # ← NÃO commitar!
+.env.local
+.env.*.local
+
+# Mas manter um exemplo:
+# .env.example   # ← Isso sim pode ser commitado

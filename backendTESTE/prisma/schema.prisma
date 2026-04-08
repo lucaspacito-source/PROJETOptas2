@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Plan {
+  id        Int     @id @default(autoincrement())
+  name      String
+  price     Decimal @db.Decimal(10, 2)
+  maxLinks  Int     @map("max_links")
+  maxClicks Int     @map("max_clicks")
+  users     User[]
+
+  @@map("plans")
+}
+
+model User {
+  id           BigInt   @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  planId       Int?     @unique @map("plan_id")
+  plan         Plan?    @relation(fields: [planId], references: [id])
+  shortLinks   ShortLink[]
+  reports      Report[]
+
+  @@map("users")
+}
+
+model ShortLink {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt   @map("user_id")
+  originalUrl String   @map("original_url")
+  shortCode   String   @unique @map("short_code")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id])
+
+  clickTracks ClickTrack[]
+
+  @@map("short_links")
+}
+
+model ClickTrack {
+  id          BigInt   @id @default(autoincrement())
+  shortLinkId BigInt   @map("short_link_id")
+  clickedAt   DateTime @default(now()) @map("clicked_at")
+  referrer    String?
+  userAgent   String?  @map("user_agent")
+  shortLink   ShortLink @relation(fields: [shortLinkId], references: [id])
+
+  @@map("click_tracking")
+}
+
+model Report {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt   @map("user_id")
+  reportType  String   @map("report_type")
+  generatedAt DateTime @default(now()) @map("generated_at")
+  data        Json?
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@map("reports")
+}
