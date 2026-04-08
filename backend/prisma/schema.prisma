@@ -1,1 +1,62 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // pega do .env
+}
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PlayerStatus {
+  playing
+  paused
+  stopped
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String
+  email      String     @unique
+  playlists  Playlist[]
+  createdAt  DateTime   @default(now())
+}
+
+model Music {
+  id         Int              @id @default(autoincrement())
+  title      String
+  artist     String
+  duration   Int              // duração em segundos
+  playlists  PlaylistMusic[]
+  createdAt  DateTime         @default(now())
+}
+
+model Playlist {
+  id         Int              @id @default(autoincrement())
+  name       String
+  user       User             @relation(fields: [userId], references: [id])
+  userId     Int
+  musics     PlaylistMusic[]
+  createdAt  DateTime         @default(now())
+}
+
+model PlaylistMusic {
+  id          Int      @id @default(autoincrement())
+  playlist    Playlist @relation(fields: [playlistId], references: [id])
+  playlistId  Int
+  music       Music    @relation(fields: [musicId], references: [id])
+  musicId     Int
+  addedAt     DateTime @default(now())
+
+  @@unique([playlistId, musicId]) // evita repetir música
+}
+
+model PlayerState {
+  id          Int          @id @default(autoincrement())
+  user        User         @relation(fields: [userId], references: [id])
+  userId      Int
+  music       Music?       @relation(fields: [musicId], references: [id])
+  musicId     Int?
+  status      PlayerStatus // agora é enum
+  currentTime Int?         // tempo atual da música (segundos)
+  updatedAt   DateTime     @updatedAt
+}
