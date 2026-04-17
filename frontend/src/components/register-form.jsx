@@ -22,7 +22,7 @@ export function RegisterForm({
 }) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+    <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Criar Conta</CardTitle>
           <CardDescription>
