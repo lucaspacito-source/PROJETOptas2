@@ -17,7 +17,7 @@ export default function Header() {
         onClick={() => router.push("/home")}
         className="font-semibold text-gray-700 hover:text-brand-1"
       >
-        🏠 Home
+         Home
       </button>
 
       <div className="flex gap-4">

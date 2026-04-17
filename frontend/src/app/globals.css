@@ -23,14 +23,14 @@
   --brand-4: #eaebfd;
   --brand-5: #ffffff;
 
-  --primary: #acb1f9;
-  --secondary: #c1c4fa;
-  --muted: #eaebfd;
-  --card: #ffffff;
+  --primary: var(--brand-1);
+  --secondary: var(--brand-2);
+  --muted: var(--brand-4);
+  --card: var(--brand-5);
 
-  --border: #d5d8fc;
-  --input: #d5d8fc;
-  --ring: #acb1f9;
+  --border: var(--brand-3);
+  --input: var(--brand-3);
+  --ring: var(--brand-1);
 
   --radius: 0.875rem;
 }
@@ -45,14 +45,14 @@
   --brand-4: #eaebfd;
   --brand-5: #ffffff;
 
-  --primary: #acb1f9;
-  --secondary: #c1c4fa;
+  --primary: var(--brand-1);
+  --secondary: var(--brand-2);
   --muted: #1c1c24;
   --card: #1a1a22;
 
   --border: #2a2a36;
   --input: #2a2a36;
-  --ring: #c1c4fa;
+  --ring: var(--brand-2);
 }
 
 @layer base {
@@ -80,10 +80,14 @@
 
   .text-brand-1 { color: var(--brand-1); }
   .text-brand-2 { color: var(--brand-2); }
+  .text-brand-3 { color: var(--brand-3); }
+  .text-brand-4 { color: var(--brand-4); }
+  .text-brand-5 { color: var(--brand-5); }
 
   .border-brand-1 { border-color: var(--brand-1); }
+  .border-brand-2 { border-color: var(--brand-2); }
+  .border-brand-3 { border-color: var(--brand-3); }
 
-  .hover-brand-1:hover {
-    background-color: var(--brand-2);
-  }
+  .hover-brand-1:hover { background-color: var(--brand-2); }
+  .hover-brand-2:hover { background-color: var(--brand-3); }
 }
