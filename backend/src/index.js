@@ -4,68 +4,49 @@ import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
 
-// DEBUG
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ Prisma 7 (sem datasources)
 const prisma = new PrismaClient();
-
-// Teste de conexão
-prisma.$connect()
-  .then(() => console.log("✅ Banco conectado"))
-  .catch((err) => console.error("❌ Erro ao conectar:", err));
 
 app.use(express.json());
 
-// Health check
-app.get("/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date().toISOString() });
-});
-
-// Rota principal
 app.get("/", (req, res) => {
-  res.json({
-    message: "🚀 MinURL API rodando!",
-    version: "1.0.0",
-    endpoints: {
-      health: "/health",
-      docs: "/api/docs",
-    },
-  });
+  res.json({ message: "API rodando" });
 });
 
-// Teste de leitura no banco
-app.get("/db-test", async (req, res) => {
+app.get("/users", async (req, res) => {
   try {
-    const result = await prisma.user.findMany();
-    res.json(result);
+    const users = await prisma.user.findMany();
+    res.json(users);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erro no banco" });
+    res.status(500).json({ error: "Erro ao buscar usuários" });
   }
 });
 
-// 🔥 Teste de escrita (criar usuário)
-app.get("/create-user", async (req, res) => {
+app.post("/users", async (req, res) => {
   try {
+    const { name, email } = req.body;
+
     const user = await prisma.user.create({
       data: {
-        name: "Lucas",
-        email: `lucas${Date.now()}@email.com`, // evita duplicado
+        name,
+        email,
       },
     });
 
     res.json(user);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Erro ao criar usuário" });
   }
 });
 
-// Start servidor
-app.listen(PORT, () => {
-  console.log(`Servidor em http://localhost:${PORT}`);
+app.listen(PORT, async () => {
+  try {
+    await prisma.$connect();
+    console.log("Banco conectado");
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  } catch (error) {
+    console.error("Erro ao conectar no banco", error);
+  }
 });

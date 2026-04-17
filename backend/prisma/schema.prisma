@@ -1,5 +1,6 @@
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -22,7 +23,7 @@ model User {
 }
 
 model Music {
-  id           String             @id @default(autoincrement())
+  id           Int             @id @default(autoincrement())
   title        String
   artist       String
   duration     Int
@@ -32,7 +33,7 @@ model Music {
 }
 
 model Playlist {
-  id        String             @id @default(autoincrement())
+  id        Int             @id @default(autoincrement())
   name      String
   user      User            @relation(fields: [userId], references: [id])
   userId    Int
@@ -41,7 +42,7 @@ model Playlist {
 }
 
 model PlaylistMusic {
-  id         String      @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   playlist   Playlist @relation(fields: [playlistId], references: [id])
   playlistId Int
   music      Music    @relation(fields: [musicId], references: [id])
@@ -52,7 +53,7 @@ model PlaylistMusic {
 }
 
 model PlayerState {
-  id          String          @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   user        User         @relation(fields: [userId], references: [id])
   userId      Int
   music       Music?       @relation(fields: [musicId], references: [id])
