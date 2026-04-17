@@ -37,7 +37,7 @@ export default function HomePage() {
             Home 
           </h1>
           <p className="text-gray-600 mt-2">
-            Sistema rodando com sua paleta personalizada
+          Sistema Ativo 
           </p>
         </div>
       </div>
