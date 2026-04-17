@@ -17,7 +17,7 @@ model User {
   name         String
   email        String        @unique
   playlists    Playlist[]
-  playerStates PlayerState[] // relação de volta para PlayerState
+  playerStates PlayerState[]
   createdAt    DateTime      @default(now())
 }
 
@@ -27,7 +27,7 @@ model Music {
   artist       String
   duration     Int
   playlists    PlaylistMusic[]
-  playerStates PlayerState[] // relação de volta para PlayerState
+  playerStates PlayerState[]
   createdAt    DateTime        @default(now())
 }
 
@@ -48,7 +48,7 @@ model PlaylistMusic {
   musicId    Int
   addedAt    DateTime @default(now())
 
-  @@unique([playlistId, musicId]) // evita repetir música
+  @@unique([playlistId, musicId])
 }
 
 model PlayerState {
