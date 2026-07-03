@@ -6,12 +6,12 @@ import Footer from "@/components/home/footer";
 
 export default function Home() {
   return (
-    <>
+    <div className="bg-black min-h-screen">
       <TopbarHeader />
       <HeroSection />
       <FeatureCards />
       <BenefitsList />
       <Footer />
-    </>
+    </div>
   );
 }

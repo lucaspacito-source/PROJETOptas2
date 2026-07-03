@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
-export function RegisterForm({ className, ...props }) {
+export default function RegisterForm({ className, ...props }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

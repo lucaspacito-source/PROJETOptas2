@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
-export function LoginForm({ className, ...props }) {
+export default function LoginForm({ className, ...props }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
