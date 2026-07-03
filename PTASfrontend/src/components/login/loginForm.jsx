@@ -5,37 +5,35 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginForm({ className, ...props }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setLoading(true);
 
-    const formData = new FormData(e.target);
-    const body = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
+    const { data, error } = await authClient.signIn.email({
+      email,
+      password,
+    });
 
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+    setLoading(false);
 
-      if (!res.ok) throw new Error("Credenciais inválidas");
-      alert("Login realizado com sucesso!");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    if (error) {
+      setError("Credenciais inválidas. Verifique seu email e senha.");
+      return;
     }
+
+    router.push("/dashboard");
   }
 
   return (
@@ -73,6 +71,8 @@ export default function LoginForm({ className, ...props }) {
                 name="email"
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="h-12 rounded-lg bg-[#121212] border-white/10 text-white placeholder:text-neutral-500 focus-visible:ring-[#FF8DA1]/50 focus-visible:border-[#FF8DA1]"
               />
             </Field>
@@ -91,6 +91,8 @@ export default function LoginForm({ className, ...props }) {
                 name="password"
                 type="password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="h-12 rounded-lg bg-[#121212] border-white/10 text-white placeholder:text-neutral-500 focus-visible:ring-[#FF8DA1]/50 focus-visible:border-[#FF8DA1]"
               />
             </Field>

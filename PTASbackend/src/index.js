@@ -7,6 +7,7 @@ import { toNodeHandler } from "better-auth/node";
 import { requireAuth } from "./middleware/auth.js";
 import planRoutes from "./routes/plan.routes.js";
 import serviceRoutes from "./routes/service.routes.js";
+import musicRoutes from "./routes/music.routes.js";
 
 dotenv.config();
 
@@ -48,6 +49,8 @@ app.get("/api/me", requireAuth, (req, res) => {
 app.use("/api/plans", planRoutes);
 
 app.use("/api/services", serviceRoutes);
+
+app.use("/api/musics", musicRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

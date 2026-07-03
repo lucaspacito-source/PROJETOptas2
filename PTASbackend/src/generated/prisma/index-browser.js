@@ -124,37 +124,42 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  createdAt: 'createdAt',
   emailVerified: 'emailVerified',
   image: 'image',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ServiceScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  price: 'price',
-  discount: 'discount',
-  estimatedTime: 'estimatedTime',
-  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.OfferScalarFieldEnum = {
+exports.Prisma.MusicScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  details: 'details',
-  validUntil: 'validUntil',
+  artist: 'artist',
+  duration: 'duration',
   userId: 'userId',
   createdAt: 'createdAt'
 };
 
-exports.Prisma.OfferServiceScalarFieldEnum = {
+exports.Prisma.PlaylistScalarFieldEnum = {
   id: 'id',
-  offerId: 'offerId',
-  serviceId: 'serviceId'
+  name: 'name',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PlaylistMusicScalarFieldEnum = {
+  id: 'id',
+  playlistId: 'playlistId',
+  musicId: 'musicId',
+  addedAt: 'addedAt'
+};
+
+exports.Prisma.PlayerStateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  musicId: 'musicId',
+  status: 'status',
+  currentTime: 'currentTime',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -193,16 +198,6 @@ exports.Prisma.VerificationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.PlanScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  price: 'price',
-  maxLinks: 'maxLinks',
-  maxClicks: 'maxClicks',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -217,17 +212,21 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.PlayerStatus = exports.$Enums.PlayerStatus = {
+  playing: 'playing',
+  paused: 'paused',
+  stopped: 'stopped'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Service: 'Service',
-  Offer: 'Offer',
-  OfferService: 'OfferService',
+  Music: 'Music',
+  Playlist: 'Playlist',
+  PlaylistMusic: 'PlaylistMusic',
+  PlayerState: 'PlayerState',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification',
-  Plan: 'Plan'
+  Verification: 'Verification'
 };
 
 /**

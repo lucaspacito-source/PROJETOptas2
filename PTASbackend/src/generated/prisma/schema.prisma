@@ -7,53 +7,70 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+enum PlayerStatus {
+  playing
+  paused
+  stopped
+}
+
 model User {
-  id            String    @id
+  id            String        @id
   name          String
-  email         String    @unique
-  services      Service[]
-  offers        Offer[]
-  createdAt     DateTime  @default(now())
-  emailVerified Boolean   @default(false)
+  email         String        @unique
+  emailVerified Boolean       @default(false)
   image         String?
-  updatedAt     DateTime  @updatedAt
+  playlists     Playlist[]
+  playerStates  PlayerState[]
+  musics        Music[]
   sessions      Session[]
   accounts      Account[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   @@map("user")
 }
 
-model Service {
-  id            String         @id @default(uuid())
-  name          String
-  description   String?
-  price         Float
-  discount      Float?
-  estimatedTime Int?
-  user          User           @relation(fields: [userId], references: [id])
-  userId        String
-  offerServices OfferService[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+model Music {
+  id           Int             @id @default(autoincrement())
+  title        String
+  artist       String
+  duration     Int
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  playlists    PlaylistMusic[]
+  playerStates PlayerState[]
+  createdAt    DateTime        @default(now())
 }
 
-model Offer {
-  id         String         @id @default(uuid())
-  title      String
-  details    String?
-  validUntil DateTime?
-  services   OfferService[]
-  user       User           @relation(fields: [userId], references: [id])
-  userId     String
-  createdAt  DateTime       @default(now())
+model Playlist {
+  id        Int             @id @default(autoincrement())
+  name      String
+  user      User            @relation(fields: [userId], references: [id])
+  userId    String
+  musics    PlaylistMusic[]
+  createdAt DateTime        @default(now())
 }
 
-model OfferService {
-  id        String  @id @default(uuid())
-  offer     Offer   @relation(fields: [offerId], references: [id])
-  offerId   String
-  service   Service @relation(fields: [serviceId], references: [id])
-  serviceId String
+model PlaylistMusic {
+  id         Int      @id @default(autoincrement())
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+  playlistId Int
+  music      Music    @relation(fields: [musicId], references: [id])
+  musicId    Int
+  addedAt    DateTime @default(now())
+
+  @@unique([playlistId, musicId])
+}
+
+model PlayerState {
+  id          Int          @id @default(autoincrement())
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String
+  music       Music?       @relation(fields: [musicId], references: [id])
+  musicId     Int?
+  status      PlayerStatus
+  currentTime Int?
+  updatedAt   DateTime     @updatedAt
 }
 
 model Session {
@@ -102,16 +119,4 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
-}
-
-model Plan {
-  id        String   @id @default(uuid())
-  name      String
-  price     Float
-  maxLinks  Int
-  maxClicks Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("plan")
 }

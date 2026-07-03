@@ -5,39 +5,49 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { authClient } from "../../lib/auth-client";
 
 export default function RegisterForm({ className, ...props }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
     setError("");
 
-    const formData = new FormData(e.target);
-    const body = {
-      username: formData.get("username"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-      confirmPassword: formData.get("confirmPassword"),
-    };
-
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (!res.ok) throw new Error("Erro ao registrar");
-      alert("Conta criada com sucesso!");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    if (password.length < 8) {
+      setError("A senha deve ter pelo menos 8 caracteres.");
+      return;
     }
+
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem.");
+      return;
+    }
+
+    setLoading(true);
+
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setError("Erro ao criar conta. Verifique os dados e tente novamente.");
+      return;
+    }
+
+    router.push("/dashboard");
   }
 
   return (
@@ -67,14 +77,16 @@ export default function RegisterForm({ className, ...props }) {
             </FieldSeparator>
 
             <Field>
-              <FieldLabel htmlFor="username" className="text-white font-bold text-xs uppercase tracking-wide">
-                Nome de usuário
+              <FieldLabel htmlFor="name" className="text-white font-bold text-xs uppercase tracking-wide">
+                Nome completo
               </FieldLabel>
               <Input
-                id="username"
-                name="username"
+                id="name"
+                name="name"
                 type="text"
                 required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="h-12 rounded-lg bg-[#121212] border-white/10 text-white placeholder:text-neutral-500 focus-visible:ring-[#FF8DA1]/50 focus-visible:border-[#FF8DA1]"
               />
             </Field>
@@ -88,6 +100,8 @@ export default function RegisterForm({ className, ...props }) {
                 name="email"
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="h-12 rounded-lg bg-[#121212] border-white/10 text-white placeholder:text-neutral-500 focus-visible:ring-[#FF8DA1]/50 focus-visible:border-[#FF8DA1]"
               />
             </Field>
@@ -101,8 +115,13 @@ export default function RegisterForm({ className, ...props }) {
                 name="password"
                 type="password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="h-12 rounded-lg bg-[#121212] border-white/10 text-white placeholder:text-neutral-500 focus-visible:ring-[#FF8DA1]/50 focus-visible:border-[#FF8DA1]"
               />
+              <FieldDescription className="text-xs text-neutral-500">
+                Deve ter pelo menos 8 caracteres.
+              </FieldDescription>
             </Field>
 
             <Field>
@@ -114,9 +133,30 @@ export default function RegisterForm({ className, ...props }) {
                 name="confirmPassword"
                 type="password"
                 required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="h-12 rounded-lg bg-[#121212] border-white/10 text-white placeholder:text-neutral-500 focus-visible:ring-[#FF8DA1]/50 focus-visible:border-[#FF8DA1]"
               />
             </Field>
+
+            <div className="flex items-start gap-2 text-sm text-neutral-400">
+              <input
+                id="terms"
+                type="checkbox"
+                required
+                className="mt-1 rounded border-white/20 bg-[#121212] text-[#FF8DA1] focus:ring-[#FF8DA1]/50"
+              />
+              <label htmlFor="terms">
+                Eu concordo com os{" "}
+                <a href="#" className="text-white font-bold hover:underline">
+                  termos de uso
+                </a>{" "}
+                e{" "}
+                <a href="#" className="text-white font-bold hover:underline">
+                  política de privacidade
+                </a>
+              </label>
+            </div>
 
             {error && <p className="text-[#FF8DA1] text-sm font-medium">{error}</p>}
 
@@ -126,7 +166,7 @@ export default function RegisterForm({ className, ...props }) {
                 disabled={loading}
                 className="rounded-full h-12 bg-[#FF8DA1] text-black font-bold text-base hover:bg-[#FF6F8D] hover:scale-[1.02] transition-transform"
               >
-                {loading ? "Registrando..." : "Criar conta"}
+                {loading ? "Criando conta..." : "Criar conta"}
               </Button>
               <FieldDescription className="text-center text-neutral-400">
                 Já tem uma conta?{" "}
