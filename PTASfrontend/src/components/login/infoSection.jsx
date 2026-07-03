@@ -1,29 +1,18 @@
-import { ClipboardIcon } from "lucide-react";
+import { Music } from "lucide-react";
 
 export default function InfoSection() {
     return (
-        <section className="bg-purple-100 h-screen flex items-center justify-center">
-            <div className="flex flex-col gap-6 p-8">
-
-                <div className="flex items-center justify-center w-15 h-15 rounded-full bg-purple-600">
-                    <ClipboardIcon className="w-6 h-6 text-white" />
-                </div>
-
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        Gerencie seus serviços com facilidade
-                    </h1>
-                    <p className="mt-2 text-gray-700">
-                        Acesse sua plataforma e mantenha todos os seus serviços organizados em um só lugar.
-                    </p>
-                </div>
-
-                <ul className="flex flex-col gap-2 text-purple-800 list-disc list-inside md:gap-4">
-                    <li>Cadastro rápido e intuitivo</li>
-                    <li>Controle total dos seus dados</li>
-                    <li>Interface profissional e moderna</li>
-                </ul>
+        <div className="flex flex-col items-center gap-3 text-center mb-8">
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#FF8DA1]">
+                <Music className="w-7 h-7 text-black" />
             </div>
-        </section>
+
+            <h1 className="text-3xl font-black text-white tracking-tight">
+                Pacito Sound
+            </h1>
+            <p className="text-neutral-400 max-w-xs">
+                Entre e volte a colocar seus serviços no play.
+            </p>
+        </div>
     );
 }
